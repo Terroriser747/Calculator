@@ -80,8 +80,31 @@ function calculate(){
 function evaluation(evaloperator){
     if (expression.operation!=null && expression.b!=""){
         console.log(expression);
-        expression.a=parseInt(expression.a);
-        expression.b=parseInt(expression.b);
+
+        if (typeof expression.a!="number"){
+            if (expression.a.includes('.')){
+                if(checkfordecimal(expression.a)){
+                    return;
+                }
+                expression.a=parseFloat(expression.a);
+            }
+            else{
+                expression.a=parseInt(expression.a);
+            }
+        }
+
+        if(checkfordecimal(expression.b)){
+            return;
+        }
+
+        if (expression.b.includes('.')){
+            expression.b=parseFloat(expression.b);
+        }
+        else{
+            expression.b=parseInt(expression.b);
+        }
+
+        
         if (expression.operation=="add"){
             result=operate(add,expression.a,expression.b);
         }
@@ -116,6 +139,17 @@ function evaluation(evaloperator){
     }
 }
 
+function checkfordecimal(n){
+    if ((n.split('.').length-1)>1){ //checks if n has more than 1 decimal points
+        display.textContent="Error";
+        setTimeout(()=>display.textContent='',500);
+        expression.a='';
+        expression.b='';
+        expression.operation=null;
+        return true;
+    }
+}
+
 function backspace(back){
     if ((expression.b==''&&expression.a!='')&&expression.operation!=null){
         expression.operation=null;
@@ -130,6 +164,5 @@ function backspace(back){
     display.textContent=display.textContent.slice(0,display.textContent.length-1);
 
 }
-
 
 calculate();
